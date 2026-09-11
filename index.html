@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rini — Founding Product Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2430;
+    --ink-soft:#5A6472;
+    --paper:#F5F6F4;
+    --paper-raised:#FFFFFF;
+    --line:#DADFE3;
+    --accent:#2E5C56;
+    --accent-soft:#E7EDEB;
+    --gold:#B08A4E;
+    --impact:#3B6E91;
+    --project:#6B4C6B;
+    --rail-w:76px;
+    --content-max:720px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:#E7E5DF;
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    padding:28px;
+  }
+  ::selection{background:var(--accent-soft); color:var(--ink);}
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:500; color:var(--ink); margin:0; }
+  a{color:var(--accent); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  p{margin:0 0 1em 0; color:var(--ink-soft);}
+
+  /* ---- App window chrome ---- */
+  .app-window{
+    max-width:1240px;
+    margin:0 auto;
+    background:var(--paper);
+    border-radius:10px;
+    box-shadow:0 30px 60px -20px rgba(27,36,48,0.25), 0 0 0 1px rgba(27,36,48,0.06);
+    overflow:hidden;
+  }
+  .title-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 20px;
+    background:var(--paper-raised);
+    border-bottom:1px solid var(--line);
+  }
+  .title-bar-left{ display:flex; align-items:center; gap:16px; }
+  .traffic{ display:flex; gap:7px; }
+  .traffic span{ width:11px; height:11px; border-radius:50%; display:inline-block; }
+  .traffic span:nth-child(1){ background:#E0645A; }
+  .traffic span:nth-child(2){ background:#E3B341; }
+  .traffic span:nth-child(3){ background:#3FA772; }
+  .breadcrumb{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .breadcrumb b{ color:var(--ink); font-weight:500; }
+  .status-pills{ display:flex; gap:8px; }
+  .pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    padding:4px 10px;
+    border-radius:20px;
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+    display:flex;
+    align-items:center;
+    gap:6px;
+    white-space:nowrap;
+  }
+  .pill .dot{ width:6px; height:6px; border-radius:50%; background:var(--accent); }
+  .pill.open .dot{ background:var(--gold); }
+
+  .layout{ display:flex; align-items:flex-start; }
+
+  /* ---- Icon rail ---- */
+  nav.rail{
+    width:var(--rail-w);
+    flex-shrink:0;
+    border-right:1px solid var(--line);
+    padding:20px 0;
+    position:sticky;
+    top:0;
+    align-self:stretch;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+  }
+  .rail a{
+    width:48px;
+    height:48px;
+    border-radius:8px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:3px;
+    color:var(--ink-soft);
+    position:relative;
+  }
+  .rail a svg{ width:19px; height:19px; }
+  .rail a .rail-label{
+    font-size:9px;
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:0.2px;
+  }
+  .rail a:hover{ background:var(--paper-raised); text-decoration:none; color:var(--ink); }
+  .rail a.active{ background:var(--accent-soft); color:var(--accent); }
+  .rail a.active::before{
+    content:"";
+    position:absolute;
+    left:-20px;
+    width:3px;
+    height:22px;
+    border-radius:2px;
+    background:var(--accent);
+  }
+  .rail-line{
+    width:1px;
+    flex:1;
+    background:repeating-linear-gradient(to bottom, var(--line) 0 4px, transparent 4px 8px);
+    margin:8px 0;
+  }
+
+  main{ flex:1; min-width:0; padding:56px 56px 100px 56px; }
+  section{ max-width:var(--content-max); margin-bottom:96px; scroll-margin-top:32px; }
+  section:last-child{ margin-bottom:32px; }
+  .kicker{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--accent); margin-bottom:14px; }
+
+  /* Hero */
+  #profile h1{ font-size:40px; line-height:1.18; max-width:10em; }
+  #profile h1 em{ font-style:italic; color:var(--accent); }
+  #profile .lede{ font-size:17px; max-width:34em; margin-top:20px; }
+  .why-note{
+    margin-top:22px;
+    padding:14px 16px;
+    border:1px dashed var(--line);
+    border-radius:6px;
+    background:var(--paper-raised);
+    font-size:13.5px;
+    color:var(--ink-soft);
+    max-width:34em;
+  }
+  .why-note b{ color:var(--ink); }
+  .stat-row{ display:flex; gap:36px; margin-top:32px; padding-top:26px; border-top:1px solid var(--line); flex-wrap:wrap; }
+  .stat .num{ font-family:'Fraunces', serif; font-size:24px; }
+  .stat .label{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; border-bottom:1px solid var(--line); padding-bottom:14px; margin-bottom:8px; }
+  .section-head h2{ font-size:24px; }
+  .section-sub{ font-size:13.5px; color:var(--ink-soft); margin:10px 0 28px 0; max-width:36em; }
+
+  /* ---- Journey timeline (horizontal) ---- */
+  #journey{ max-width:none; }
+  .journey-legend{ display:flex; gap:18px; margin-bottom:16px; flex-wrap:wrap; }
+  .legend-item{ display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-soft); font-family:'IBM Plex Mono', monospace; }
+  .legend-item .dot{ width:7px; height:7px; border-radius:50%; }
+  .legend-item.begin .dot{ background:var(--gold); }
+  .legend-item.work .dot{ background:var(--accent); }
+  .legend-item.impact .dot{ background:var(--impact); }
+  .legend-item.project .dot{ background:var(--project); }
+
+  .progress-track{ height:2px; background:var(--line); border-radius:2px; margin-bottom:20px; overflow:hidden; }
+  .progress-fill{ height:100%; width:0%; background:var(--accent); border-radius:2px; }
+
+  .journey-scroller{
+    display:flex;
+    gap:1px;
+    overflow-x:auto;
+    padding-bottom:16px;
+    cursor:grab;
+    scrollbar-width:thin;
+  }
+  .journey-scroller.dragging{ cursor:grabbing; }
+  .journey-scroller::-webkit-scrollbar{ height:6px; }
+  .journey-scroller::-webkit-scrollbar-thumb{ background:var(--line); border-radius:3px; }
+
+  .j-card{
+    flex:0 0 260px;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    padding:18px 18px 20px 18px;
+    user-select:none;
+  }
+  .j-card:first-child{ border-radius:6px 0 0 6px; }
+  .j-card:last-child{ border-radius:0 6px 6px 0; }
+  .j-tag{ display:flex; align-items:center; gap:6px; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-soft); margin-bottom:12px; }
+  .j-tag .dot{ width:6px; height:6px; border-radius:50%; }
+  .j-tag.begin .dot{ background:var(--gold); }
+  .j-tag.work .dot{ background:var(--accent); }
+  .j-tag.impact .dot{ background:var(--impact); }
+  .j-tag.project .dot{ background:var(--project); }
+  .j-card .j-period{ font-size:11px; color:var(--ink-soft); font-family:'IBM Plex Mono', monospace; margin-bottom:4px; }
+  .j-card h4{ font-family:'Fraunces', serif; font-weight:500; font-size:16px; margin:0 0 8px 0; }
+  .j-card p{ font-size:13px; margin-bottom:0; }
+
+  /* Experience */
+  .role{ display:grid; grid-template-columns:160px 1fr; gap:26px; padding:26px 0; border-bottom:1px solid var(--line); }
+  .role:last-child{ border-bottom:none; }
+  .role-meta .period{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-soft); }
+  .role-meta .company{ margin-top:6px; font-weight:500; }
+  .role-body h3{ font-size:18px; font-weight:500; margin-bottom:5px; }
+  .role-body .role-sub{ font-size:13.5px; color:var(--accent); margin-bottom:13px; }
+  .role-body ul{ margin:0; padding-left:18px; color:var(--ink-soft); }
+  .role-body ul li{ margin-bottom:11px; }
+  .role-body ul li::marker{ color:var(--gold); }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:15px; }
+  .tag{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); background:var(--paper); border:1px solid var(--line); padding:4px 9px; border-radius:3px; }
+
+  /* Projects */
+  .project{ padding:30px 0; border-bottom:1px solid var(--line); }
+  .project:last-child{ border-bottom:none; }
+  .project-head{ display:flex; justify-content:space-between; align-items:baseline; gap:16px; flex-wrap:wrap; }
+  .project-head h3{ font-size:19px; font-weight:500; }
+  .project-head .status{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--project); white-space:nowrap; }
+  .project p.desc{ margin-top:9px; }
+  .project ul{ margin:13px 0 0 0; padding-left:18px; color:var(--ink-soft); }
+  .project ul li{ margin-bottom:8px; }
+  .project ul li::marker{ color:var(--gold); }
+  .media-slot{
+    margin-top:18px; border:1px dashed var(--line); border-radius:4px; background:var(--paper-raised);
+    aspect-ratio:16/9; max-width:480px; display:flex; align-items:center; justify-content:center; text-align:center; padding:18px;
+  }
+  .media-slot .slot-label{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--ink-soft); line-height:1.5; }
+
+  /* Skills */
+  .skills-grid{ display:grid; grid-template-columns:1fr 1fr; gap:28px 44px; }
+  .skill-group .group-title{ font-size:13.5px; font-weight:600; margin-bottom:8px; }
+  .skill-group p{ font-size:14px; margin:0; }
+
+  #contact p{ font-size:15.5px; max-width:32em; }
+  .contact-links{ display:flex; gap:26px; margin-top:22px; flex-wrap:wrap; }
+  .contact-links a{ font-weight:500; color:var(--ink); border-bottom:1px solid var(--accent); padding-bottom:2px; }
+
+  .mobile-rail{ display:none; }
+
+  /* ---- Ambient sound toggle ---- */
+  .sound-toggle{
+    position:fixed;
+    right:24px;
+    bottom:24px;
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    box-shadow:0 8px 20px -6px rgba(27,36,48,0.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    z-index:50;
+    color:var(--ink-soft);
+    transition:color 0.2s ease, border-color 0.2s ease;
+  }
+  .sound-toggle svg{ width:19px; height:19px; }
+  .sound-toggle.playing{ color:var(--accent); border-color:var(--accent); }
+  .sound-toggle .bars{ display:flex; align-items:flex-end; gap:2px; height:14px; }
+  .sound-toggle .bars span{
+    width:3px; background:currentColor; border-radius:1px;
+    animation:none;
+    height:4px;
+  }
+  .sound-toggle.playing .bars span{ animation:sound-bar 0.9s ease-in-out infinite; }
+  .sound-toggle.playing .bars span:nth-child(2){ animation-delay:0.15s; }
+  .sound-toggle.playing .bars span:nth-child(3){ animation-delay:0.3s; }
+  @keyframes sound-bar{
+    0%, 100%{ height:4px; }
+    50%{ height:14px; }
+  }
+  .sound-hint{
+    position:fixed;
+    right:24px;
+    bottom:76px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    color:var(--ink-soft);
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    padding:4px 9px;
+    border-radius:4px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.2s ease;
+    z-index:50;
+  }
+  .sound-toggle:hover + .sound-hint{ opacity:1; }
+
+  /* ---- AI chat widget ---- */
+  .chat-toggle{
+    position:fixed;
+    left:24px;
+    bottom:24px;
+    height:46px;
+    padding:0 18px 0 14px;
+    border-radius:23px;
+    background:var(--ink);
+    color:#fff;
+    border:none;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    cursor:pointer;
+    box-shadow:0 8px 20px -6px rgba(27,36,48,0.35);
+    z-index:50;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:13.5px;
+    font-weight:500;
+  }
+  .chat-toggle svg{ width:18px; height:18px; }
+  .chat-panel{
+    position:fixed;
+    left:24px;
+    bottom:82px;
+    width:340px;
+    max-width:calc(100vw - 48px);
+    height:440px;
+    max-height:calc(100vh - 140px);
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:10px;
+    box-shadow:0 24px 50px -18px rgba(27,36,48,0.35);
+    display:none;
+    flex-direction:column;
+    overflow:hidden;
+    z-index:50;
+  }
+  .chat-panel.open{ display:flex; }
+  .chat-head{
+    padding:14px 16px;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .chat-head-title{ font-family:'Fraunces', serif; font-size:14.5px; font-weight:500; }
+  .chat-head-sub{ font-family:'IBM Plex Mono', monospace; font-size:10px; color:var(--accent); margin-top:2px; }
+  .chat-close{ background:none; border:none; cursor:pointer; color:var(--ink-soft); font-size:16px; line-height:1; padding:4px; }
+  .chat-messages{
+    flex:1;
+    overflow-y:auto;
+    padding:14px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .chat-msg{ font-size:13px; line-height:1.55; max-width:88%; padding:8px 11px; border-radius:8px; }
+  .chat-msg.bot{ background:var(--accent-soft); color:var(--ink); align-self:flex-start; border-bottom-left-radius:2px; }
+  .chat-msg.user{ background:var(--ink); color:#fff; align-self:flex-end; border-bottom-right-radius:2px; }
+  .chat-msg.pending{ color:var(--ink-soft); font-style:italic; }
+  .chat-input-row{ border-top:1px solid var(--line); display:flex; gap:8px; padding:10px; }
+  .chat-input-row input{
+    flex:1; border:1px solid var(--line); border-radius:6px; padding:9px 10px;
+    font-family:'IBM Plex Sans', sans-serif; font-size:13px; background:var(--paper);
+  }
+  .chat-input-row input:focus{ outline:none; border-color:var(--accent); }
+  .chat-input-row button{
+    border:none; background:var(--accent); color:#fff; border-radius:6px; padding:0 14px;
+    font-size:13px; font-weight:500; cursor:pointer;
+  }
+  .chat-input-row button:disabled{ opacity:0.5; cursor:default; }
+  .chat-suggestions{ display:flex; flex-wrap:wrap; gap:6px; padding:0 16px 12px 16px; }
+  .chat-chip{
+    font-size:11.5px; color:var(--ink-soft); background:var(--paper); border:1px solid var(--line);
+    border-radius:20px; padding:5px 10px; cursor:pointer;
+  }
+  .chat-chip:hover{ border-color:var(--accent); color:var(--accent); }
+
+  @media (max-width: 900px){
+    body{ padding:0; }
+    .app-window{ border-radius:0; }
+    .layout{ flex-direction:column; }
+    nav.rail{ display:none; }
+    .mobile-rail{
+      display:flex; position:sticky; top:0; z-index:10; background:var(--paper);
+      border-bottom:1px solid var(--line); padding:14px 16px; gap:22px; overflow-x:auto; font-size:11px;
+    }
+    .mobile-rail a{ color:var(--ink-soft); white-space:nowrap; font-family:'IBM Plex Mono', monospace; }
+    .mobile-rail a.active{ color:var(--accent); font-weight:500; }
+    main{ padding:40px 20px 70px 20px; }
+    #profile h1{ font-size:29px; }
+    .role{ grid-template-columns:1fr; gap:8px; }
+    .skills-grid{ grid-template-columns:1fr; }
+    .title-bar{ flex-wrap:wrap; gap:10px; }
+    .status-pills{ order:3; width:100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-window">
+
+  <div class="title-bar">
+    <div class="title-bar-left">
+      <div class="traffic"><span></span><span></span><span></span></div>
+      <div class="breadcrumb">~/<b>rini</b>/portfolio</div>
+    </div>
+    <div class="status-pills">
+      <span class="pill"><span class="dot"></span>build: passing</span>
+      <span class="pill open"><span class="dot"></span>open to opportunities</span>
+    </div>
+  </div>
+
+  <div class="mobile-rail">
+    <a href="#profile" class="rlink">profile</a>
+    <a href="#journey" class="rlink">journey</a>
+    <a href="#experience" class="rlink">experience</a>
+    <a href="#projects" class="rlink">projects</a>
+    <a href="#skills" class="rlink">skills</a>
+    <a href="#contact" class="rlink">contact</a>
+  </div>
+
+  <div class="layout">
+    <nav class="rail">
+      <a href="#profile" class="rlink" title="Profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+        <span class="rail-label">profile</span>
+      </a>
+      <a href="#journey" class="rlink" title="Journey">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>
+        <span class="rail-label">journey</span>
+      </a>
+      <a href="#experience" class="rlink" title="Experience">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="7" width="18" height="13" rx="1.5"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        <span class="rail-label">work</span>
+      </a>
+      <a href="#projects" class="rlink" title="Projects">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 8a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        <span class="rail-label">projects</span>
+      </a>
+      <a href="#skills" class="rlink" title="Skills">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 6h10M4 12h16M4 18h7"/><circle cx="17" cy="6" r="2"/><circle cx="10" cy="18" r="2"/></svg>
+        <span class="rail-label">skills</span>
+      </a>
+      <div class="rail-line"></div>
+      <a href="#contact" class="rlink" title="Contact">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 6.5l9 6 9-6"/></svg>
+        <span class="rail-label">contact</span>
+      </a>
+    </nav>
+
+    <main>
+
+      <section id="profile">
+        <div class="kicker">Product &amp; infrastructure engineer — devops / AI / ML</div>
+        <h1>I build the systems a small team runs on — <em>and I ship them under real production load</em>.</h1>
+        <p class="lede">
+          Founding Product Engineer at Solarpunk Technology, building Ubik — an AI-native
+          workspace for enterprise supply chain operators in seafood and perishables. My scope
+          runs across cloud infrastructure, agentic AI/RAG pipelines, ERP integrations, and
+          security compliance — the full stack a small team needs to stay standing on, not one layer of it.
+        </p>
+        <div class="why-note">
+          <b>Why this work —</b> [Rini: this is the spot for your own words on what pulled you
+          toward infra/AI, and what you're actually proud of. Send them over and I'll drop them in here.]
+        </div>
+        <div class="stat-row">
+          <div class="stat"><div class="num">6+</div><div class="label">Production services owned end to end</div></div>
+          <div class="stat"><div class="num">3</div><div class="label">Enterprise customers on the platform I help run</div></div>
+          <div class="stat"><div class="num">0</div><div class="label">Critical/High findings in our last SOC 2 pentest</div></div>
+        </div>
+      </section>
+
+      <section id="journey">
+        <div class="section-head"><h2>Journey</h2></div>
+        <p class="section-sub">Scroll or drag sideways — foundation, roles, and the moments of real impact along the way.</p>
+        <div class="journey-legend">
+          <span class="legend-item begin"><span class="dot"></span>begin</span>
+          <span class="legend-item work"><span class="dot"></span>work</span>
+          <span class="legend-item impact"><span class="dot"></span>impact</span>
+          <span class="legend-item project"><span class="dot"></span>project</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="journey-scroller" id="scroller">
+          <div class="j-card">
+            <div class="j-tag begin"><span class="dot"></span>begin</div>
+            <div class="j-period">Foundation</div>
+            <h4>B.Tech, Information Technology</h4>
+            <p>Where the systems-thinking habit started.</p>
+          </div>
+          <div class="j-card">
+            <div class="j-tag work"><span class="dot"></span>work</div>
+            <div class="j-period">Earlier</div>
+            <h4>Cloud Infrastructure Engineer — STAAH Hotel Software</h4>
+            <p>GCP, AWS, FastAPI, Docker, GitHub Actions, PostgreSQL — the stack I still build on.</p>
+          </div>
+          <div class="j-card">
+            <div class="j-tag work"><span class="dot"></span>work</div>
+            <div class="j-period">Present</div>
+            <h4>Founding Product Engineer — Solarpunk Technology</h4>
+            <p>Joined early; scope grew to cover infra, AI pipelines, integrations, and compliance.</p>
+          </div>
+          <div class="j-card">
+            <div class="j-tag impact"><span class="dot"></span>impact</div>
+            <div class="j-period">Shipped</div>
+            <h4>Dynamics 365 Finance integration</h4>
+            <p>Built from scratch — FastAPI service, OData sync, 173 unit + 46 integration tests.</p>
+          </div>
+          <div class="j-card">
+            <div class="j-tag impact"><span class="dot"></span>impact</div>
+            <div class="j-period">Incident</div>
+            <h4>Fixed an 80K-row sync crisis</h4>
+            <p>A customer's bill volume broke our sync loop; redesigned it so scale stopped being a landmine.</p>
+          </div>
+          <div class="j-card">
+            <div class="j-tag impact"><span class="dot"></span>impact</div>
+            <div class="j-period">Passed</div>
+            <h4>Third-party SOC 2 pentest</h4>
+            <p>No Critical or High findings — after owning the controls that made that possible.</p>
+          </div>
+          <div class="j-card">
+            <div class="j-tag project"><span class="dot"></span>project</div>
+            <div class="j-period">Side build</div>
+            <h4>SOC 2 Copilot</h4>
+            <p>An agentic compliance scanner, built in a single day, to show founders what's possible.</p>
+          </div>
+          <div class="j-card">
+            <div class="j-tag project"><span class="dot"></span>project</div>
+            <div class="j-period">In progress</div>
+            <h4>Repo Whisperer</h4>
+            <p>A RAG system over the nanoGPT codebase — my "learn RAG properly" curriculum project.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="experience">
+        <div class="section-head"><h2>Experience</h2></div>
+        <div class="role">
+          <div class="role-meta"><div class="period">Present</div><div class="company">Solarpunk Technology</div></div>
+          <div class="role-body">
+            <h3>Founding Product Engineer</h3>
+            <div class="role-sub">Ubik — AI-native workspace for supply chain operators</div>
+            <p>One of the earliest engineers on the team, with technical ownership spanning cloud
+            infrastructure, agentic AI/RAG systems, ERP integrations, and SOC 2 compliance. Ubik
+            serves enterprise customers including AZ Gems International, Sandhya Marines, and Wanaka.</p>
+            <ul>
+              <li>Built the Dynamics 365 Finance integration from scratch — a full FastAPI service (<em>Ubik-d365</em>) with OData API sync, a Bronze/BigQuery data architecture, and Cloud Run deployment via Workload Identity Federation, covered by 173 unit and 46 integration tests.</li>
+              <li>Designed <em>ubik-zoho</em>, a backend on a Bronze/Silver medallion architecture with 7 sync modules and write-action endpoints, plus a separate Zoho Analytics API integration.</li>
+              <li>One customer, AZ Gems, runs over 80,000 vendor bills through their ERP sync — and at that volume, the pipeline began timing out and quietly dropping updates, the kind of failure that doesn't surface until finance is reconciling numbers that don't match. I split it into a dedicated <em>erp_bills</em> table with dual cursors and hard page-count limits, so scale stopped being a landmine.</li>
+              <li>Own technical delivery across SOC 2 controls — encryption at rest, monitoring &amp; alerting evidence across 7 repos, RBAC evidence spanning GCP IAM/GitHub/AWS IAM, environment separation, input sanitization (found and fixed a critical SQL injection via Semgrep), backup &amp; DR, and network access control via a NetBird WireGuard mesh. Our most recent third-party pentest returned no Critical or High findings.</li>
+              <li>Ran a full architectural audit of the Ubik codebase, surfacing a partially migrated memory system, dead vector-store code, and an authentication bypass risk on an email endpoint — since triaged and fixed.</li>
+              <li>Led Google OAuth verification for Ubik's Gmail/Calendar scopes, reducing the requested scope count and rewriting per-scope justifications.</li>
+            </ul>
+            <div class="tag-row">
+              <span class="tag">AWS / GCP</span><span class="tag">FastAPI</span><span class="tag">Cloud Run</span>
+              <span class="tag">BigQuery</span><span class="tag">Neo4j / Graphiti</span><span class="tag">RAG &amp; agentic pipelines</span>
+              <span class="tag">SOC 2</span><span class="tag">Zoho &amp; Dynamics 365</span>
+            </div>
+            <div class="media-slot"><div class="slot-label">Screenshot or flow chart:<br>Ubik-d365 sync architecture</div></div>
+          </div>
+        </div>
+        <div class="role">
+          <div class="role-meta"><div class="period">Earlier</div><div class="company">STAAH Hotel Software<br><span style="font-weight:400;">(acquired by The Access Group)</span></div></div>
+          <div class="role-body">
+            <h3>Cloud Infrastructure Engineer</h3>
+            <p>Built the technical foundation I still rely on today — hands-on infrastructure and
+            backend work across cloud platforms, deployment pipelines, and relational data systems.</p>
+            <div class="tag-row">
+              <span class="tag">GCP</span><span class="tag">AWS</span><span class="tag">Python / FastAPI</span>
+              <span class="tag">Docker</span><span class="tag">GitHub Actions</span><span class="tag">PostgreSQL</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects">
+        <div class="section-head"><h2>Projects</h2></div>
+        <div class="project">
+          <div class="project-head"><h3>SOC 2 Copilot</h3><span class="status">built in a day</span></div>
+          <p class="desc">An agentic infrastructure-compliance scanner, built to show founders what an
+          automated compliance review can look like — not a generic take-home exercise.</p>
+          <ul>
+            <li>Pipeline: infra config (Terraform state and/or a live cloud API) → vector retrieval over SOC 2/CIS reference docs → a reasoning agent → a self-check pass → a GitHub PR with findings, traced end to end in Langfuse.</li>
+            <li>Built two versions of the reasoning stage: a fixed pipeline and an agentic, tool-calling version, as alternate demo paths.</li>
+            <li>Runs on Gemini's free-tier API, with a small frontend to review findings.</li>
+          </ul>
+          <div class="media-slot"><div class="slot-label">Screenshot: SOC 2 Copilot findings view<br>or the pipeline flow chart</div></div>
+        </div>
+        <div class="project">
+          <div class="project-head"><h3>Repo Whisperer</h3><span class="status">in progress</span></div>
+          <p class="desc">A retrieval-augmented question-answering system built directly over the
+          karpathy/nanoGPT codebase — the anchor project for a hands-on "learn it properly" curriculum on RAG.</p>
+          <ul>
+            <li>Local pipeline built with sentence-transformers for embeddings and Ollama for inference.</li>
+            <li>Chunking phase complete; currently working through a capability limitation at the 1B-parameter model scale.</li>
+          </ul>
+          <div class="media-slot"><div class="slot-label">Screen recording: querying the nanoGPT<br>codebase through Repo Whisperer</div></div>
+        </div>
+        <div class="project">
+          <div class="project-head"><h3>Coffee Chat</h3><span class="status">early build</span></div>
+          <p class="desc">An AI-driven relationship-intelligence booking platform — helping people
+          prep for and get more out of one-on-one meetings.</p>
+          <ul>
+            <li>Built on FastAPI and Supabase, with Gemini powering the intelligence layer and Langfuse for observability.</li>
+            <li>Database schema designed and a running skeleton confirmed end to end.</li>
+          </ul>
+          <div class="media-slot"><div class="slot-label">Screenshot: Coffee Chat booking flow</div></div>
+        </div>
+      </section>
+
+      <section id="skills">
+        <div class="section-head"><h2>Skills</h2></div>
+        <div class="skills-grid">
+          <div class="skill-group"><div class="group-title">Cloud &amp; infrastructure</div><p>AWS, GCP, Cloud Run, Workload Identity Federation, Docker, GitHub Actions.</p></div>
+          <div class="skill-group"><div class="group-title">Backend &amp; data</div><p>Python, FastAPI, PostgreSQL, BigQuery, medallion (Bronze/Silver) architectures.</p></div>
+          <div class="skill-group"><div class="group-title">AI &amp; LLM systems</div><p>RAG pipelines, vector retrieval, agentic tool-calling systems, Neo4j/Graphiti knowledge graphs, Langfuse observability.</p></div>
+          <div class="skill-group"><div class="group-title">Integrations</div><p>Zoho (Books, Analytics), Microsoft Dynamics 365 (OData), Google Workspace OAuth.</p></div>
+          <div class="skill-group"><div class="group-title">Security &amp; compliance</div><p>SOC 2 technical ownership, Semgrep, NetBird WireGuard mesh networking, encryption &amp; backup/DR practices.</p></div>
+          <div class="skill-group"><div class="group-title">Education</div><p>B.Tech in Information Technology.</p></div>
+        </div>
+      </section>
+
+      <section id="contact">
+        <div class="section-head"><h2>Contact</h2></div>
+        <p>Open to conversations about DevOps, AI, and ML engineering roles. The fastest way to
+        reach me is email — happy to walk through any of the projects above in more depth.</p>
+        <div class="contact-links">
+          <a href="mailto:rini@example.com">Email</a>
+          <a href="#">LinkedIn</a>
+          <a href="#">GitHub</a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<button class="sound-toggle" id="soundToggle" aria-label="Toggle ambient sound" title="A quiet ambient tone while you read">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" style="display:none;" id="noteIcon">
+    <path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/>
+  </svg>
+  <div class="bars"><span></span><span></span><span></span></div>
+</button>
+<div class="sound-hint">quiet ambience — click to play</div>
+
+<button class="chat-toggle" id="chatToggle" aria-label="Ask about Rini's work">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M21 11.5a8.4 8.4 0 0 1-8.4 8.4 8.6 8.6 0 0 1-3.9-.9L3 20l1.1-3.5A8.3 8.3 0 0 1 3 11.5 8.4 8.4 0 0 1 11.4 3a8.4 8.4 0 0 1 8.4 8.4z"/></svg>
+  Ask about my work
+</button>
+
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-head">
+    <div>
+      <div class="chat-head-title">RiniPilot</div>
+      <div class="chat-head-sub">grounded on my real background — not general chat</div>
+    </div>
+    <button class="chat-close" id="chatClose">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg bot">Hi — ask me anything about Rini's experience, projects, or stack. I only answer from her real background.</div>
+  </div>
+  <div class="chat-suggestions">
+    <span class="chat-chip" data-q="What's her experience with SOC 2 compliance?">SOC 2 experience?</span>
+    <span class="chat-chip" data-q="Tell me about the Dynamics 365 integration she built.">D365 integration?</span>
+    <span class="chat-chip" data-q="What AI/ML work has she done?">AI/ML work?</span>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" id="chatInput" placeholder="Ask a question…" maxlength="500">
+    <button id="chatSend">Send</button>
+  </div>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('main section');
+  const railLinks = document.querySelectorAll('.rail a.rlink');
+  const mobileLinks = document.querySelectorAll('.mobile-rail a.rlink');
+
+  const setActive = (id) => {
+    [...railLinks, ...mobileLinks].forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+    });
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) setActive(entry.target.id); });
+  }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+  sections.forEach(section => observer.observe(section));
+
+  // Journey horizontal drag-to-scroll + progress bar
+  const scroller = document.getElementById('scroller');
+  const fill = document.getElementById('progressFill');
+  let isDown = false, startX, scrollLeftStart;
+
+  const updateFill = () => {
+    const max = scroller.scrollWidth - scroller.clientWidth;
+    const pct = max > 0 ? (scroller.scrollLeft / max) * 100 : 0;
+    fill.style.width = pct + '%';
+  };
+  scroller.addEventListener('scroll', updateFill);
+  window.addEventListener('resize', updateFill);
+  updateFill();
+
+  scroller.addEventListener('mousedown', (e) => {
+    isDown = true;
+    scroller.classList.add('dragging');
+    startX = e.pageX;
+    scrollLeftStart = scroller.scrollLeft;
+  });
+  window.addEventListener('mouseup', () => { isDown = false; scroller.classList.remove('dragging'); });
+  window.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const dx = e.pageX - startX;
+    scroller.scrollLeft = scrollLeftStart - dx;
+  });
+
+  // ---- Ambient sound toggle: synthesized calm drone (no external audio file, no autoplay) ----
+  const soundBtn = document.getElementById('soundToggle');
+  let audioCtx, gainMain, isPlaying = false;
+
+  function startAmbience(){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    gainMain = audioCtx.createGain();
+    gainMain.gain.value = 0;
+    gainMain.connect(audioCtx.destination);
+    gainMain.gain.linearRampToValueAtTime(0.045, audioCtx.currentTime + 1.2);
+
+    // two gently detuned low tones + a slow "breathing" LFO on volume
+    const freqs = [130.8, 164.8]; // C3, E3 — a calm open interval
+    freqs.forEach((f, i) => {
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = f;
+      const oscGain = audioCtx.createGain();
+      oscGain.gain.value = i === 0 ? 0.6 : 0.4;
+      osc.connect(oscGain);
+      oscGain.connect(gainMain);
+      osc.start();
+      osc._node = oscGain;
+    });
+
+    const lfo = audioCtx.createOscillator();
+    lfo.frequency.value = 0.08;
+    const lfoGain = audioCtx.createGain();
+    lfoGain.gain.value = 0.015;
+    lfo.connect(lfoGain);
+    lfoGain.connect(gainMain.gain);
+    lfo.start();
+  }
+
+  function stopAmbience(){
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+    gainMain.gain.linearRampToValueAtTime(0, now + 0.8);
+    setTimeout(() => { audioCtx.close(); audioCtx = null; }, 900);
+  }
+
+  soundBtn.addEventListener('click', () => {
+    isPlaying = !isPlaying;
+    soundBtn.classList.toggle('playing', isPlaying);
+    if (isPlaying) startAmbience(); else stopAmbience();
+  });
+
+  // ---- AI chat widget: calls your Cloudflare Worker, which holds the real API key ----
+  // ⚠️ REPLACE this with your deployed Worker URL after following worker.js's setup steps.
+  const WORKER_URL = "https://rinipilot.rinirathore6.workers.dev";
+
+  const chatToggle = document.getElementById('chatToggle');
+  const chatPanel = document.getElementById('chatPanel');
+  const chatClose = document.getElementById('chatClose');
+  const chatMessages = document.getElementById('chatMessages');
+  const chatInput = document.getElementById('chatInput');
+  const chatSend = document.getElementById('chatSend');
+
+  chatToggle.addEventListener('click', () => {
+    chatPanel.classList.toggle('open');
+    if (chatPanel.classList.contains('open')) chatInput.focus();
+  });
+  chatClose.addEventListener('click', () => chatPanel.classList.remove('open'));
+
+  document.querySelectorAll('.chat-chip').forEach(chip => {
+    chip.addEventListener('click', () => { chatInput.value = chip.dataset.q; sendChat(); });
+  });
+
+  function addMessage(text, who){
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + who;
+    div.textContent = text;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return div;
+  }
+
+  async function sendChat(){
+    const text = chatInput.value.trim();
+    if (!text) return;
+    addMessage(text, 'user');
+    chatInput.value = '';
+    chatSend.disabled = true;
+    const pending = addMessage('Thinking…', 'bot pending');
+
+    try {
+      const res = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text }),
+      });
+      const data = await res.json();
+      pending.classList.remove('pending');
+      pending.textContent = res.ok ? data.answer : (data.error || 'Something went wrong — try again.');
+    } catch (err) {
+      pending.classList.remove('pending');
+      pending.textContent = "Couldn't reach the assistant — it may not be deployed yet.";
+    } finally {
+      chatSend.disabled = false;
+    }
+  }
+
+  chatSend.addEventListener('click', sendChat);
+  chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendChat(); });
+</script>
+
+</body>
+</html>
