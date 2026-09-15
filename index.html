@@ -266,7 +266,7 @@
   .exp-when{ text-align:right; font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--ink-soft); white-space:nowrap; }
   .exp-when .exp-loc{ margin-top:2px; }
   .exp-summary{ margin-top:13px; font-size:13.5px; }
-  .exp-details{ margin-top:4px; }
+  .exp-details{ margin-top:14px; }
   .exp-details summary{
     cursor:pointer; font-size:12.5px; font-weight:500; color:var(--accent);
     list-style:none; display:inline-flex; align-items:center; gap:4px; user-select:none;
@@ -602,7 +602,7 @@
             <div class="j-tag impact"><span class="dot"></span>impact</div>
             <div class="j-period">Shipped</div>
             <h4>Re-architected email intelligence platform</h4>
-            <p>50 production accounts migrated to Aurinko; ~9,600 lines of legacy code removed.</p>
+            <p>50 production accounts migrated to Aurinko; ~4,948 lines of legacy code removed across 4 staged PRs.</p>
           </div>
           <div class="j-card">
             <div class="j-tag impact"><span class="dot"></span>impact</div>
@@ -681,11 +681,17 @@
               <p class="exp-summary">One of the earliest engineers on the team, with technical ownership spanning cloud
               infrastructure, agentic AI/RAG systems, ERP integrations, and SOC 2 compliance. Ubik
               serves enterprise customers including AZ Gems International, Sandhya Marines, and Wanaka.</p>
+              <div class="tag-row">
+                <span class="tag">AWS / GCP</span><span class="tag">FastAPI</span><span class="tag">Cloud Run</span>
+                <span class="tag">BigQuery</span><span class="tag">Neo4j / Graphiti</span><span class="tag">RAG &amp; agentic pipelines</span>
+                <span class="tag">SOC 2 Type I/II</span><span class="tag">Zoho &amp; Dynamics 365</span><span class="tag">MCP</span>
+                <span class="tag">Aurinko</span><span class="tag">Electron / Nextron</span><span class="tag">Langfuse / PostHog</span>
+              </div>
               <details class="exp-details">
                 <summary></summary>
                 <div class="exp-details-body">
                   <ul>
-                    <li>Re-architected Ubik's email intelligence platform across 50 production customer accounts — migrating from raw Gmail Pub/Sub and direct Microsoft webhook APIs to Aurinko, with OAuth-based authentication, a 180-day historical backfill, and webhook-driven real-time sync. Removed roughly 9,600 lines of legacy code across 46 files and made inbox sync reliable for production.</li>
+                    <li>Re-architected Ubik's email intelligence platform across 50 production customer accounts — migrating from raw Gmail Pub/Sub and direct Microsoft webhook APIs (split across 3 uncoordinated servers on two clouds) to Aurinko, with OAuth-based authentication, a 180-day historical backfill, and webhook-driven real-time sync. The migration also fixed a real, documented reliability gap (Microsoft had no equivalent of Gmail's gap-recovery fallback) and removed Google's "unverified app" OAuth warning at signup. Rolled out in stages — new signups first, then existing accounts migrated in verified batches — before removing the legacy stack in 4 dependency-ordered, individually-reviewed PRs, ~4,948 lines across 24 files.</li>
                     <li>Shipped an LLM-based email analysis engine generating 8+ structured insights per email: summaries, urgency detection, task extraction, deadline detection, contact enrichment, business categorization, and reply suggestions.</li>
                     <li>Delivered an enterprise data platform integrating Zoho Books, Inventory, and Analytics, Microsoft Dynamics 365 Finance, and Business Central — 20+ business entities flowing into BigQuery and PostgreSQL — extended with a Zoho MCP server for real-time AI-assistant queries. Partnered directly with AZ Gems International, Sandhya Marines, and Wanaka to scope their ERP integration requirements. On the Dynamics 365 side specifically, built a dedicated FastAPI service (<em>Ubik-d365</em>) with OData API sync and Cloud Run deployment via Workload Identity Federation, covered by 173 unit and 46 integration tests; on the Zoho side, <em>ubik-zoho</em> runs a Bronze/Silver medallion architecture across 7 sync modules. When one customer's 80,000+ vendor bills started timing out the sync, split it into a dedicated <em>erp_bills</em> table with dual cursors and hard page-count limits so scale stopped being a landmine.</li>
                     <li>Built multi-modal document extraction (PDF, Excel, Word, CSV, and more) for email attachments and file uploads, and designed a knowledge-graph memory system (Neo4j + Graphiti) with hybrid retrieval and deterministic entity deduplication — together expanding what the AI assistant can read, remember, and act on.</li>
@@ -697,12 +703,6 @@
                     <li>Ubik ships as an Electron/Next.js (Nextron) desktop client backed by a Python/FastAPI monolith. Currently helping plan a six-service migration (Auth &amp; Identity, Email &amp; Contacts Sync, Meeting Intelligence, Document &amp; Notebook Tools, Core Platform API, Admin &amp; Subscriptions), reasoned around data ownership and operational boundaries rather than splitting the monolith just because it got big.</li>
                     <li>Extended the platform with AI meeting transcription and summarization (via Recall.ai) and AI-assisted contact management, alongside the email intelligence engine — giving supply chain operators one place to track client communications, meetings, and follow-ups inside their custom workflows.</li>
                   </ul>
-                  <div class="tag-row">
-                    <span class="tag">AWS / GCP</span><span class="tag">FastAPI</span><span class="tag">Cloud Run</span>
-                    <span class="tag">BigQuery</span><span class="tag">Neo4j / Graphiti</span><span class="tag">RAG &amp; agentic pipelines</span>
-                    <span class="tag">SOC 2 Type I/II</span><span class="tag">Zoho &amp; Dynamics 365</span><span class="tag">MCP</span>
-                    <span class="tag">Aurinko</span><span class="tag">Electron / Nextron</span><span class="tag">Langfuse / PostHog</span>
-                  </div>
                   <div class="media-slot"><div class="slot-label">Screenshot or flow chart:<br>email intelligence / Ubik-d365 sync architecture</div></div>
                 </div>
               </details>
@@ -725,6 +725,11 @@
               <p class="exp-summary">Built the technical foundation I still rely on today — hands-on infrastructure and
               backend work across cloud platforms, deployment pipelines, and relational data systems,
               for a cloud-based hospitality software provider.</p>
+              <div class="tag-row">
+                <span class="tag">AWS</span><span class="tag">GCP</span><span class="tag">Lambda / CloudWatch / SNS</span>
+                <span class="tag">Datadog / Wazuh</span><span class="tag">PCI-DSS</span><span class="tag">PostgreSQL</span>
+                <span class="tag">Docker</span><span class="tag">GitHub Actions</span>
+              </div>
               <details class="exp-details">
                 <summary></summary>
                 <div class="exp-details-body">
@@ -735,11 +740,6 @@
                     <li>Optimized AWS production costs — cutting S3 expenses by over 50% (about $400/month) and DynamoDB costs by 30%.</li>
                     <li>Secured PCI certification for The Access Group (STAAH), preparing documentation to SISA standards and overseeing the compliance program.</li>
                   </ul>
-                  <div class="tag-row">
-                    <span class="tag">AWS</span><span class="tag">GCP</span><span class="tag">Lambda / CloudWatch / SNS</span>
-                    <span class="tag">Datadog / Wazuh</span><span class="tag">PCI-DSS</span><span class="tag">PostgreSQL</span>
-                    <span class="tag">Docker</span><span class="tag">GitHub Actions</span>
-                  </div>
                 </div>
               </details>
             </div>
@@ -759,6 +759,9 @@
               </div>
               <div class="exp-role">Trainee — STAAH Hotel Software</div>
               <p class="exp-summary">Fast-tracked to Cloud Infrastructure Engineer within 3 months on the strength of this work.</p>
+              <div class="tag-row">
+                <span class="tag">AWS Glue / Athena</span><span class="tag">EC2 / RDS</span><span class="tag">VPN</span>
+              </div>
               <details class="exp-details">
                 <summary></summary>
                 <div class="exp-details-body">
@@ -766,9 +769,6 @@
                     <li>Established a centralized system for real-time monitoring of Linux-based EC2 servers and RDS databases, streamlining resource management.</li>
                     <li>Built ETL pipelines (AWS Glue, Athena) and secure VPN infrastructure, while documenting cloud architectures.</li>
                   </ul>
-                  <div class="tag-row">
-                    <span class="tag">AWS Glue / Athena</span><span class="tag">EC2 / RDS</span><span class="tag">VPN</span>
-                  </div>
                 </div>
               </details>
             </div>
@@ -788,15 +788,15 @@
               </div>
               <div class="exp-role">Cloud Intern — AWS Consulting Partner</div>
               <p class="exp-summary">First hands-on cloud role, at an AWS consulting partner building app solutions for businesses.</p>
+              <div class="tag-row">
+                <span class="tag">AWS Personalize</span>
+              </div>
               <details class="exp-details">
                 <summary></summary>
                 <div class="exp-details-body">
                   <ul>
                     <li>Developed an AWS Personalize recommendation system delivering personalized learning experiences for K–2 students, gaining hands-on experience with AWS cloud services.</li>
                   </ul>
-                  <div class="tag-row">
-                    <span class="tag">AWS Personalize</span>
-                  </div>
                 </div>
               </details>
             </div>
@@ -957,45 +957,66 @@
     scroller.scrollLeft = scrollLeftStart - dx;
   });
 
-  // ---- Ambient sound toggle: synthesized calm drone (no external audio file, no autoplay) ----
+  // ---- Ambient sound toggle: gentle generated pad + soft arpeggio (no external audio file, no autoplay) ----
   const soundBtn = document.getElementById('soundToggle');
-  let audioCtx, gainMain, isPlaying = false;
+  let audioCtx, gainMain, arpTimer, isPlaying = false;
 
   function startAmbience(){
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     gainMain = audioCtx.createGain();
     gainMain.gain.value = 0;
     gainMain.connect(audioCtx.destination);
-    gainMain.gain.linearRampToValueAtTime(0.045, audioCtx.currentTime + 1.2);
+    gainMain.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 1.5);
 
-    // two gently detuned low tones + a slow "breathing" LFO on volume
-    const freqs = [130.8, 164.8]; // C3, E3 — a calm open interval
-    freqs.forEach((f, i) => {
+    // warm background chord (add9-ish: root, fifth, ninth), tuned to A=444Hz reference pitch
+    const padFreqs = [132.0, 197.8, 296.4, 395.6]; // C3, G3, D4, G4 @ 444Hz tuning
+    padFreqs.forEach((f, i) => {
       const osc = audioCtx.createOscillator();
       osc.type = 'sine';
       osc.frequency.value = f;
       const oscGain = audioCtx.createGain();
-      oscGain.gain.value = i === 0 ? 0.6 : 0.4;
+      oscGain.gain.value = [0.5, 0.28, 0.16, 0.1][i];
       osc.connect(oscGain);
       oscGain.connect(gainMain);
       osc.start();
-      osc._node = oscGain;
     });
 
     const lfo = audioCtx.createOscillator();
-    lfo.frequency.value = 0.08;
+    lfo.frequency.value = 0.07;
     const lfoGain = audioCtx.createGain();
     lfoGain.gain.value = 0.015;
     lfo.connect(lfoGain);
     lfoGain.connect(gainMain.gain);
     lfo.start();
+
+    // soft, slow bell-like arpeggio drifting on top (pentatonic @ 444Hz tuning, always sounds pleasant)
+    const scale = [528.0, 592.6, 665.3, 791.1, 888.0]; // C5 D5 E5 G5 A5 @ 444Hz tuning
+    function pluckNote(){
+      if (!audioCtx) return;
+      const freq = scale[Math.floor(Math.random() * scale.length)];
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      const noteGain = audioCtx.createGain();
+      noteGain.gain.value = 0;
+      osc.connect(noteGain);
+      noteGain.connect(gainMain);
+      const now = audioCtx.currentTime;
+      noteGain.gain.linearRampToValueAtTime(0.05, now + 0.4);
+      noteGain.gain.exponentialRampToValueAtTime(0.0001, now + 3.5);
+      osc.start(now);
+      osc.stop(now + 3.6);
+      arpTimer = setTimeout(pluckNote, 2800 + Math.random() * 2400);
+    }
+    arpTimer = setTimeout(pluckNote, 1500);
   }
 
   function stopAmbience(){
     if (!audioCtx) return;
+    clearTimeout(arpTimer);
     const now = audioCtx.currentTime;
     gainMain.gain.linearRampToValueAtTime(0, now + 0.8);
-    setTimeout(() => { audioCtx.close(); audioCtx = null; }, 900);
+    setTimeout(() => { if (audioCtx) { audioCtx.close(); audioCtx = null; } }, 900);
   }
 
   const soundLabel = document.getElementById('soundLabel');
